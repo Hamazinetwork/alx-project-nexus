@@ -11,3 +11,7 @@ export interface ProductProps{
     id: string;
     description: string
 }
+export interface layoutProps{
+  children: React.ReactNode;
+
+}
