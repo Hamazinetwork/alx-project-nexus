@@ -9,7 +9,7 @@ export interface ProductProps{
     plusIcon: string;
     name:string;
     id: string;
-    description: string
+    description?: string
 }
 export interface layoutProps{
   children: React.ReactNode;
