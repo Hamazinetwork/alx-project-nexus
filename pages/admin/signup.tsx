@@ -46,9 +46,10 @@ const Signup: React.FC = () => {
         },
         body: JSON.stringify({
           email: formData.email,
-          fullname: formData.fullname, // ✅ match backend
+          fullname: formData.fullname, 
           password: formData.password,
-          password_confirm: formData.confirmPassword, // ✅ match backend
+          password_confirm: formData.confirmPassword,
+          is_admin: true 
         }),
       });
 
@@ -71,7 +72,7 @@ const Signup: React.FC = () => {
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded-lg p-8 w-full max-w-md"
       >
-        <h2 className="text-3xl font-extrabold mb-6 text-black">Admin Signup</h2>
+        <h2 className="text-3xl font-extrabold mb-6 text-black">Signup</h2>
 
         {error && <p className="text-red-600 mb-4">{error}</p>}
         {success && <p className="text-green-600 mb-4">{success}</p>}

@@ -38,10 +38,10 @@ const AdminLogin: React.FC = () => {
       const data = await response.json();
       console.log("Admin login response:", data);
 
-      // Save token for protected routes
+      // Save Token
       localStorage.setItem("token", data.token);
 
-      // Redirect to Admin Dashboard
+      // Redirect 
       router.push("/admin/dashboard");
     } catch (err) {
       setError((err as Error).message);

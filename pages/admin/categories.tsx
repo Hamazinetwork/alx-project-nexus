@@ -65,7 +65,7 @@ const CreateCategory: React.FC = () => {
           required
         />
 
-        <button type="submit" className="bg-purple-700 text-white w-full py-2 rounded hover:bg-purple-800">
+        <button type="submit" className="bg-[#4F225E] text-white w-full py-2 rounded hover:bg-[#4F225A]">
           Create Category
         </button>
       </form>

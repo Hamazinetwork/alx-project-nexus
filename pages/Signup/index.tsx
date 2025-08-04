@@ -46,9 +46,9 @@ const Signup: React.FC = () => {
         },
         body: JSON.stringify({
           email: formData.email,
-          fullname: formData.fullname, // ✅ match backend
+          fullname: formData.fullname, 
           password: formData.password,
-          password_confirm: formData.confirmPassword, // ✅ match backend
+          password_confirm: formData.confirmPassword, 
         }),
       });
 

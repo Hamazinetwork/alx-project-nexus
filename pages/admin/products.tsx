@@ -25,7 +25,7 @@ const CreateProduct: React.FC = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const token = localStorage.getItem("token"); // store token after login
+        const token = localStorage.getItem("token"); 
         const response = await fetch(
           "https://martafrica.onrender.com/api/categories/",
           {
@@ -43,7 +43,7 @@ const CreateProduct: React.FC = () => {
         const data = await response.json();
         console.log("Categories Response:", data);
 
-        // Handle both array and object response
+        // array and object response
         if (Array.isArray(data)) {
           setCategories(data);
         } else if (data.results) {
@@ -60,20 +60,20 @@ const CreateProduct: React.FC = () => {
     fetchCategories();
   }, []);
 
-  // Handle input change
+  // input change
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle image upload
+  // image upload
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFormData((prev) => ({ ...prev, image: e.target.files![0] }));
     }
   };
 
-  // Handle submit product
+  
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
