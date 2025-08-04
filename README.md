@@ -55,3 +55,8 @@ Products page fetches and displays items
 
 Admin page allows adding new products & images
 
+## Author
+MartaFrica Dev Team
+Frontend by Rahman Ademola
+Backend by Catherine Wuyep
+
