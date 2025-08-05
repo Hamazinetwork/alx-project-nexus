@@ -24,7 +24,7 @@ const CreateProduct: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  // 1️⃣ Fetch categories on load
+  
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -52,7 +52,7 @@ const CreateProduct: React.FC = () => {
           throw new Error(errMsg);
         }
 
-        // Handle array or paginated response
+        
         if (Array.isArray(data)) setCategories(data);
         else if (data.results) setCategories(data.results);
         else setCategories([]);
@@ -65,7 +65,7 @@ const CreateProduct: React.FC = () => {
     fetchCategories();
   }, []);
 
-  // 2️⃣ Handle input fields
+  
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -80,7 +80,7 @@ const CreateProduct: React.FC = () => {
     }
   };
 
-  // 4️⃣ Handle form submit
+  
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
@@ -136,7 +136,7 @@ const CreateProduct: React.FC = () => {
         image: null,
       });
 
-      // Optional: Redirect to public products page
+      
       setTimeout(() => router.push("/products"), 1500);
     } catch (err) {
       console.error(err);

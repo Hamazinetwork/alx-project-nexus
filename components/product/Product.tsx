@@ -24,7 +24,7 @@ const ProductList: React.FC = () => {
 
         if (!response.ok) throw new Error(JSON.stringify(data));
 
-        // Handle paginated or array response
+        
         if (Array.isArray(data)) setProducts(data);
         else if (data.results) setProducts(data.results);
         else setProducts([]);

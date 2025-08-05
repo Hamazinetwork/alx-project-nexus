@@ -8,7 +8,7 @@ const AdminDashboard: React.FC = () => {
   useEffect(() => {
     const adminToken = localStorage.getItem("adminToken");
     if (!adminToken) {
-      router.push("/admin/login"); // Redirect if not logged in
+      router.push("/admin/login"); 
     } else {
       setToken(adminToken);
     }
@@ -22,7 +22,7 @@ const AdminDashboard: React.FC = () => {
       <div className="space-x-4">
         <button
           onClick={() => router.push("/admin/products")}
-          className="px-4 py-2 bg-purple-700 text-white rounded hover:bg-purple-800"
+          className="px-4 py-2 bg-[#4F225E] text-white rounded hover:bg-purple-800"
         >
           Manage Products
         </button>
