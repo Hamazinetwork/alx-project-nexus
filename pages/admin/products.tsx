@@ -1,4 +1,5 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import { useRouter } from "next/router";
 
 type Category = {
   id: number;
@@ -6,6 +7,8 @@ type Category = {
 };
 
 const CreateProduct: React.FC = () => {
+  const router = useRouter();
+
   const [categories, setCategories] = useState<Category[]>([]);
   const [formData, setFormData] = useState({
     name: "",
@@ -21,59 +24,63 @@ const CreateProduct: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  // Fetch categories with admin token
+  // 1️⃣ Fetch categories on load
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const token = localStorage.getItem("token"); 
+        const token = localStorage.getItem("token");
+        const prefix = localStorage.getItem("authPrefix") || "Token";
+
+        if (!token) throw new Error("You are not logged in as admin!");
+
         const response = await fetch(
           "https://martafrica.onrender.com/api/categories/",
           {
             headers: {
-              "Authorization": `Bearer ${token}`,
-              "Content-Type": "application/json",
+              Authorization: `${prefix} ${token}`,
+              Accept: "application/json",
             },
           }
         );
 
-        if (!response.ok) {
-          throw new Error("Unauthorized or failed to fetch categories");
-        }
-
         const data = await response.json();
         console.log("Categories Response:", data);
 
-        // array and object response
-        if (Array.isArray(data)) {
-          setCategories(data);
-        } else if (data.results) {
-          setCategories(data.results);
-        } else {
-          setCategories([]);
+        if (!response.ok) {
+          const errMsg =
+            data?.detail || data?.message || "Failed to fetch categories";
+          throw new Error(errMsg);
         }
+
+        // Handle array or paginated response
+        if (Array.isArray(data)) setCategories(data);
+        else if (data.results) setCategories(data.results);
+        else setCategories([]);
       } catch (err) {
         console.error(err);
-        setError("Failed to load categories. Check login or token.");
+        setError((err as Error).message);
       }
     };
 
     fetchCategories();
   }, []);
 
-  // input change
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  // 2️⃣ Handle input fields
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // image upload
+  // 3️⃣ Handle image selection
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFormData((prev) => ({ ...prev, image: e.target.files![0] }));
     }
   };
 
-  
+  // 4️⃣ Handle form submit
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
@@ -81,9 +88,9 @@ const CreateProduct: React.FC = () => {
 
     try {
       const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("You are not logged in as admin!");
-      }
+      const prefix = localStorage.getItem("authPrefix") || "Token";
+
+      if (!token) throw new Error("You are not logged in as admin!");
 
       const productData = new FormData();
       productData.append("name", formData.name);
@@ -102,19 +109,22 @@ const CreateProduct: React.FC = () => {
         {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${token}`,
+            Authorization: `${prefix} ${token}`,
           },
           body: productData,
         }
       );
 
+      const data = await response.json();
+      console.log("Product creation response:", data);
+
       if (!response.ok) {
-        throw new Error("Failed to create product");
+        const errMsg =
+          data?.message || data?.detail || "Failed to create product";
+        throw new Error(errMsg);
       }
 
-      const data = await response.json();
-      console.log("Product Created:", data);
-      setSuccess("Product created successfully!");
+      setSuccess("✅ Product created successfully!");
       setFormData({
         name: "",
         description: "",
@@ -125,7 +135,11 @@ const CreateProduct: React.FC = () => {
         total_qty: "",
         image: null,
       });
+
+      // Optional: Redirect to public products page
+      setTimeout(() => router.push("/products"), 1500);
     } catch (err) {
+      console.error(err);
       setError((err as Error).message);
     }
   };
@@ -150,6 +164,7 @@ const CreateProduct: React.FC = () => {
           value={formData.name}
           onChange={handleChange}
           className="w-full border p-2 mb-3 rounded"
+          required
         />
 
         <input
@@ -159,6 +174,7 @@ const CreateProduct: React.FC = () => {
           value={formData.description}
           onChange={handleChange}
           className="w-full border p-2 mb-3 rounded"
+          required
         />
 
         <input
@@ -177,6 +193,7 @@ const CreateProduct: React.FC = () => {
           value={formData.price}
           onChange={handleChange}
           className="w-full border p-2 mb-3 rounded"
+          required
         />
 
         <select
@@ -184,6 +201,7 @@ const CreateProduct: React.FC = () => {
           value={formData.category_id}
           onChange={handleChange}
           className="w-full border p-2 mb-3 rounded"
+          required
         >
           <option value="">Select Category</option>
           {Array.isArray(categories) &&
@@ -216,6 +234,7 @@ const CreateProduct: React.FC = () => {
           type="file"
           onChange={handleFileChange}
           className="w-full mb-3"
+          accept="image/*"
         />
 
         <button

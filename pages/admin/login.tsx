@@ -25,10 +25,13 @@ const AdminLogin: React.FC = () => {
 
     try {
       const response = await fetch(
-        "https://martafrica.onrender.com/api/admin/login/",
+        "https://martafrica.onrender.com/api/login/",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+             
+            "Content-Type": "application/json"
+             },
           body: JSON.stringify(formData),
         }
       );
@@ -42,7 +45,7 @@ const AdminLogin: React.FC = () => {
       localStorage.setItem("token", data.token);
 
       // Redirect 
-      router.push("/admin/dashboard");
+      router.push("/admin/products");
     } catch (err) {
       setError((err as Error).message);
     }

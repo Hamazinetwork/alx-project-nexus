@@ -48,8 +48,7 @@ const Signup: React.FC = () => {
           email: formData.email,
           fullname: formData.fullname, 
           password: formData.password,
-          password_confirm: formData.confirmPassword,
-          is_admin: true 
+          password_confirm: formData.confirmPassword, 
         }),
       });
 
@@ -57,7 +56,12 @@ const Signup: React.FC = () => {
       console.log("Response status:", response.status, "Response:", data);
 
       if (!response.ok) {
-        throw new Error(data.message || `Signup failed with ${response.status}`);
+         const errorMessage =
+          data?.message ||
+          data?.email?.[0] ||
+          data?.non_field_errors?.[0] ||
+          `Signup failed with ${response.status}`;
+        throw new Error(errorMessage);
       }
 
       setSuccess('Signup successful!');
@@ -134,7 +138,7 @@ const Signup: React.FC = () => {
 
         <p className="text-center text-sm text-gray-600">
           Already have an account?{' '}
-          <Link href="/Login" className="text-green-600 font-semibold hover:underline">
+          <Link href="/login.tsx" className="text-green-600 font-semibold hover:underline">
             Login
           </Link>
         </p>
