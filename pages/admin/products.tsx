@@ -25,7 +25,7 @@ const AdminProducts: React.FC = () => {
 
   const router = useRouter();
 
-  // ✅ Check for token and fetch categories
+  // Check for token and fetch categories
   useEffect(() => {
     const adminToken = localStorage.getItem("token");
     if (!adminToken) {
@@ -36,7 +36,7 @@ const AdminProducts: React.FC = () => {
     fetchCategories(adminToken);
   }, [router]);
 
-  // ✅ Fetch categories
+  // Fetch categories
   const fetchCategories = async (adminToken: string) => {
     try {
       const response = await fetch(
@@ -67,20 +67,20 @@ const AdminProducts: React.FC = () => {
     }
   };
 
-  // ✅ Input change
+  // Input change
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ✅ Image upload
+  //  Image upload
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFormData((prev) => ({ ...prev, image: e.target.files![0] }));
     }
   };
 
-  // ✅ Submit new product
+  // Submit new product
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
@@ -101,7 +101,7 @@ const AdminProducts: React.FC = () => {
       productData.append("sizes", formData.sizes);
       productData.append("total_qty", formData.total_qty);
       if (formData.image) {
-        productData.append("images", formData.image); // ✅ Match backend field
+        productData.append("images", formData.image); 
       }
 
       const response = await fetch(
@@ -109,7 +109,7 @@ const AdminProducts: React.FC = () => {
         {
           method: "POST",
           headers: {
-            Authorization: `Token ${token}`, // ✅ Correct token format
+            Authorization: `Token ${token}`, 
           },
           body: productData,
         }

@@ -14,7 +14,7 @@ const CategoriesPage: React.FC = () => {
   const [success, setSuccess] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
-  // 1️⃣ Get token on page load
+  
   useEffect(() => {
     const adminToken = localStorage.getItem("token");
     if (!adminToken) {
@@ -24,7 +24,7 @@ const CategoriesPage: React.FC = () => {
     }
   }, [router]);
 
-  // 2️⃣ Fetch categories when token is ready
+  // Fetch categories when token is ready
   useEffect(() => {
     if (!token) return;
 
@@ -34,7 +34,7 @@ const CategoriesPage: React.FC = () => {
           "https://martafrica.onrender.com/api/categories/",
           {
             headers: {
-              Authorization: `Token ${token}`, // ✅ Correct for DRF TokenAuth
+              Authorization: `Token ${token}`, 
               "Content-Type": "application/json",
             },
           }
@@ -61,7 +61,7 @@ const CategoriesPage: React.FC = () => {
     fetchCategories();
   }, [token]);
 
-  // 3️⃣ Handle new category creation
+  // Handle new category creation
   const handleCreateCategory = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -92,7 +92,7 @@ const CategoriesPage: React.FC = () => {
 
       setSuccess("Category created successfully!");
       setNewCategory("");
-      setCategories((prev) => [...prev, data]); // add new category to list
+      setCategories((prev) => [...prev, data]); 
     } catch (err) {
       console.error(err);
       setError("Failed to create category. Check token or input.");

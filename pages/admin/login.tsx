@@ -26,14 +26,14 @@ const AdminLogin: React.FC = () => {
 
       if (!response.ok) throw new Error(data?.message || "Login failed");
 
-      // ✅ Correctly extract token
+      
       const token = data?.tokens?.access;
       if (!token) throw new Error("Token not received");
 
-      // ✅ Save to localStorage
+      
       localStorage.setItem("token", token);
 
-      // ✅ Redirect to dashboard
+      // Redirect
       router.push("/admin/dashboard");
     } catch (err) {
       setError((err as Error).message);

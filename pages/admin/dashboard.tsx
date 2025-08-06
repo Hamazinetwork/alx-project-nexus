@@ -8,7 +8,7 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     const adminToken = localStorage.getItem("token");
     if (!adminToken) {
-      router.push("/admin/login"); // redirect if no token
+      router.push("/admin/login"); 
     } else {
       setToken(adminToken);
     }
@@ -21,13 +21,13 @@ const Dashboard: React.FC = () => {
       <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
       <div className="space-x-4">
         <button
-          className="bg-green-600 text-white px-4 py-2 rounded"
+          className="bg-[#4F225E] text-white px-4 py-2 rounded"
           onClick={() => router.push("/admin/categories")}
         >
           Manage Categories
         </button>
         <button
-          className="bg-blue-600 text-white px-4 py-2 rounded"
+          className="bg-[4F225B] text-white px-4 py-2 rounded"
           onClick={() => router.push("/admin/products")}
         >
           Manage Products
