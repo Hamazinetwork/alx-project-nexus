@@ -33,7 +33,7 @@ const AdminProducts: React.FC = () => {
     setError(null);
 
     try {
-      // 1 Create Product first
+      // Create Product first
       const token = localStorage.getItem('token'); // must be admin
       const response = await fetch('https://martafrica.onrender.com/api/products/', {
         method: 'POST',
@@ -48,7 +48,7 @@ const AdminProducts: React.FC = () => {
       const product = await response.json();
       if (!response.ok) throw new Error(product.message || 'Product creation failed');
 
-      // 2️ If image exists, upload it
+      // 2If image exists, upload it
       if (imageFile) {
         const formData = new FormData();
         formData.append('image', imageFile);

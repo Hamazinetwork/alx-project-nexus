@@ -17,7 +17,7 @@ const CategoriesPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  // ✅ Get token from localStorage and redirect if missing
+  //Get token from localStorage and redirect
   useEffect(() => {
     const adminToken = localStorage.getItem("token");
     if (!adminToken) {
@@ -27,7 +27,7 @@ const CategoriesPage: React.FC = () => {
     }
   }, [router]);
 
-  // ✅ Fetch categories after token is available
+  // Fetch categories after token
   useEffect(() => {
     const fetchCategories = async () => {
       if (!token) return;
@@ -39,7 +39,7 @@ const CategoriesPage: React.FC = () => {
           "https://martafrica.onrender.com/api/categories/",
           {
             headers: {
-              Authorization: `Bearer ${token}`, // ✅ JWT Bearer Auth
+              Authorization: `Bearer ${token}`, 
             },
           }
         );
@@ -69,12 +69,12 @@ const CategoriesPage: React.FC = () => {
     fetchCategories();
   }, [token]);
 
-  // ✅ Handle input change
+  // Handle input change
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCategoryName(e.target.value);
   };
 
-  // ✅ Handle category creation
+  // Handle category creation
   const handleCreateCategory = async (e: FormEvent) => {
     e.preventDefault();
     if (!categoryName.trim()) return;

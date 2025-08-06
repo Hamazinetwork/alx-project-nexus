@@ -1,4 +1,4 @@
-// pages/admin/login.tsx
+
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/router";
 
@@ -38,10 +38,10 @@ const AdminLogin: React.FC = () => {
 
       if (!response.ok) throw new Error(data?.message || "Login failed");
 
-      // ✅ Save only access token
+      //  Save only access token
       if (data.tokens?.access) {
         localStorage.setItem("token", data.tokens.access);
-        router.push("/admin/dashboard"); // redirect to dashboard
+        router.push("/admin/dashboard"); 
       } else {
         throw new Error("Token not received");
       }

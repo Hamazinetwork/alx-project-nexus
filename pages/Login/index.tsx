@@ -49,7 +49,7 @@ const Login: React.FC = () => {
         throw new Error(data.message || 'Invalid email or password');
       }
 
-      // Store token and user info
+      // Token storage
       if (data.token) {
         localStorage.setItem('token', data.token);
       }
@@ -57,7 +57,7 @@ const Login: React.FC = () => {
         localStorage.setItem('user', JSON.stringify(data.user));
       }
 
-      //  Redirect to profile page
+      //  Redirect 
       router.push('/Profile');
     } catch (err) {
       setError((err as Error).message);

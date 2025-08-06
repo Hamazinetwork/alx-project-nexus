@@ -1,4 +1,4 @@
-// pages/admin/dashboard.tsx
+
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
@@ -30,7 +30,7 @@ const AdminDashboard: React.FC = () => {
         </button>
         <button
           onClick={() => router.push("/admin/products")}
-          className="[#4F225E] text-white px-6 py-3 rounded hover:bg-green-900"
+          className="bg-[#4F225E] text-white px-6 py-3 rounded hover:bg-green-900"
         >
           Manage Products
         </button>
