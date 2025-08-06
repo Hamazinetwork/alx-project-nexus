@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
-const AdminDashboard: React.FC = () => {
+const Dashboard: React.FC = () => {
   const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    const adminToken = localStorage.getItem("adminToken");
+    const adminToken = localStorage.getItem("token");
     if (!adminToken) {
-      router.push("/admin/login"); 
+      router.push("/admin/login"); // redirect if no token
     } else {
       setToken(adminToken);
     }
@@ -17,24 +17,24 @@ const AdminDashboard: React.FC = () => {
   if (!token) return <p>Loading...</p>;
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
+    <div className="min-h-screen p-6 bg-gray-100">
+      <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
       <div className="space-x-4">
         <button
-          onClick={() => router.push("/admin/products")}
-          className="px-4 py-2 bg-[#4F225E] text-white rounded hover:bg-purple-800"
+          className="bg-green-600 text-white px-4 py-2 rounded"
+          onClick={() => router.push("/admin/categories")}
         >
-          Manage Products
+          Manage Categories
         </button>
         <button
-          onClick={() => router.push("/admin/products/create")}
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+          className="bg-blue-600 text-white px-4 py-2 rounded"
+          onClick={() => router.push("/admin/products")}
         >
-          Add Product
+          Manage Products
         </button>
       </div>
     </div>
   );
 };
 
-export default AdminDashboard;
+export default Dashboard;

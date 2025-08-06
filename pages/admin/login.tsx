@@ -1,25 +1,13 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, { useState, FormEvent } from "react";
 import { useRouter } from "next/router";
-
-type AdminLoginForm = {
-  email: string;
-  password: string;
-};
 
 const AdminLogin: React.FC = () => {
   const router = useRouter();
-  const [formData, setFormData] = useState<AdminLoginForm>({
-    email: "",
-    password: "",
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
 
@@ -28,57 +16,58 @@ const AdminLogin: React.FC = () => {
         "https://martafrica.onrender.com/api/login/",
         {
           method: "POST",
-          headers: {
-             
-            "Content-Type": "application/json"
-             },
-          body: JSON.stringify(formData),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
         }
       );
-
-      if (!response.ok) throw new Error("Admin login failed");
 
       const data = await response.json();
       console.log("Admin login response:", data);
 
-      // Save Token
-      localStorage.setItem("token", data.token);
+      if (!response.ok) throw new Error(data?.message || "Login failed");
 
-      // Redirect 
-      router.push("/admin/products");
+      // ✅ Correctly extract token
+      const token = data?.tokens?.access;
+      if (!token) throw new Error("Token not received");
+
+      // ✅ Save to localStorage
+      localStorage.setItem("token", token);
+
+      // ✅ Redirect to dashboard
+      router.push("/admin/dashboard");
     } catch (err) {
       setError((err as Error).message);
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <form
         onSubmit={handleSubmit}
-        className="bg-white shadow-md rounded-lg p-8 w-full max-w-md"
+        className="bg-white p-8 rounded shadow-md w-96"
       >
-        <h2 className="text-3xl font-extrabold mb-6 text-black">Admin Login</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">Admin Login</h2>
         {error && <p className="text-red-600 mb-4">{error}</p>}
 
         <input
           type="email"
-          name="email"
           placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full border p-2 mb-3 rounded"
+          className="border w-full p-2 mb-3 rounded"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
         />
         <input
           type="password"
-          name="password"
           placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          className="w-full border p-2 mb-3 rounded"
+          className="border w-full p-2 mb-3 rounded"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
         />
         <button
           type="submit"
-          className="w-full bg-[#4F225E] text-white font-semibold text-lg rounded-xl py-3 hover:bg-[#3b1845]"
+          className="w-full bg-[#4F225E] text-white font-semibold rounded py-2 hover:bg-purple-800"
         >
           Login
         </button>

@@ -6,9 +6,7 @@ type Category = {
   name: string;
 };
 
-const CreateProduct: React.FC = () => {
-  const router = useRouter();
-
+const AdminProducts: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [formData, setFormData] = useState({
     name: "",
@@ -23,75 +21,77 @@ const CreateProduct: React.FC = () => {
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
 
-  
+  const router = useRouter();
+
+  // ✅ Check for token and fetch categories
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const prefix = localStorage.getItem("authPrefix") || "Token";
+    const adminToken = localStorage.getItem("token");
+    if (!adminToken) {
+      router.push("/admin/login"); // redirect if not logged in
+      return;
+    }
+    setToken(adminToken);
+    fetchCategories(adminToken);
+  }, [router]);
 
-        if (!token) throw new Error("You are not logged in as admin!");
-
-        const response = await fetch(
-          "https://martafrica.onrender.com/api/categories/",
-          {
-            headers: {
-              Authorization: `${prefix} ${token}`,
-              Accept: "application/json",
-            },
-          }
-        );
-
-        const data = await response.json();
-        console.log("Categories Response:", data);
-
-        if (!response.ok) {
-          const errMsg =
-            data?.detail || data?.message || "Failed to fetch categories";
-          throw new Error(errMsg);
+  // ✅ Fetch categories
+  const fetchCategories = async (adminToken: string) => {
+    try {
+      const response = await fetch(
+        "https://martafrica.onrender.com/api/categories/",
+        {
+          headers: {
+            Authorization: `Token ${adminToken}`, // ✅ Correct token format
+            "Content-Type": "application/json",
+          },
         }
+      );
 
-        
-        if (Array.isArray(data)) setCategories(data);
-        else if (data.results) setCategories(data.results);
-        else setCategories([]);
-      } catch (err) {
-        console.error(err);
-        setError((err as Error).message);
+      const data = await response.json();
+      console.log("Categories Response:", data);
+
+      if (!response.ok) throw new Error(data?.detail || "Failed to fetch categories");
+
+      if (Array.isArray(data)) {
+        setCategories(data);
+      } else if (data.results) {
+        setCategories(data.results);
+      } else {
+        setCategories([]);
       }
-    };
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load categories. Check login or token.");
+    }
+  };
 
-    fetchCategories();
-  }, []);
-
-  
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  // ✅ Input change
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 3️⃣ Handle image selection
+  // ✅ Image upload
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFormData((prev) => ({ ...prev, image: e.target.files![0] }));
     }
   };
 
-  
+  // ✅ Submit new product
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
 
+    if (!token) {
+      setError("You are not logged in as admin!");
+      return;
+    }
+
     try {
-      const token = localStorage.getItem("token");
-      const prefix = localStorage.getItem("authPrefix") || "Token";
-
-      if (!token) throw new Error("You are not logged in as admin!");
-
       const productData = new FormData();
       productData.append("name", formData.name);
       productData.append("description", formData.description);
@@ -101,7 +101,7 @@ const CreateProduct: React.FC = () => {
       productData.append("sizes", formData.sizes);
       productData.append("total_qty", formData.total_qty);
       if (formData.image) {
-        productData.append("images", formData.image); // match backend field
+        productData.append("images", formData.image); // ✅ Match backend field
       }
 
       const response = await fetch(
@@ -109,22 +109,18 @@ const CreateProduct: React.FC = () => {
         {
           method: "POST",
           headers: {
-            Authorization: `${prefix} ${token}`,
+            Authorization: `Token ${token}`, // ✅ Correct token format
           },
           body: productData,
         }
       );
 
       const data = await response.json();
-      console.log("Product creation response:", data);
+      console.log("Product Created:", data);
 
-      if (!response.ok) {
-        const errMsg =
-          data?.message || data?.detail || "Failed to create product";
-        throw new Error(errMsg);
-      }
+      if (!response.ok) throw new Error(data?.detail || "Failed to create product");
 
-      setSuccess("✅ Product created successfully!");
+      setSuccess("Product created successfully!");
       setFormData({
         name: "",
         description: "",
@@ -135,11 +131,7 @@ const CreateProduct: React.FC = () => {
         total_qty: "",
         image: null,
       });
-
-      
-      setTimeout(() => router.push("/products"), 1500);
     } catch (err) {
-      console.error(err);
       setError((err as Error).message);
     }
   };
@@ -164,7 +156,6 @@ const CreateProduct: React.FC = () => {
           value={formData.name}
           onChange={handleChange}
           className="w-full border p-2 mb-3 rounded"
-          required
         />
 
         <input
@@ -174,7 +165,6 @@ const CreateProduct: React.FC = () => {
           value={formData.description}
           onChange={handleChange}
           className="w-full border p-2 mb-3 rounded"
-          required
         />
 
         <input
@@ -193,7 +183,6 @@ const CreateProduct: React.FC = () => {
           value={formData.price}
           onChange={handleChange}
           className="w-full border p-2 mb-3 rounded"
-          required
         />
 
         <select
@@ -201,15 +190,13 @@ const CreateProduct: React.FC = () => {
           value={formData.category_id}
           onChange={handleChange}
           className="w-full border p-2 mb-3 rounded"
-          required
         >
           <option value="">Select Category</option>
-          {Array.isArray(categories) &&
-            categories.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.name}
-              </option>
-            ))}
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
+            </option>
+          ))}
         </select>
 
         <input
@@ -230,16 +217,11 @@ const CreateProduct: React.FC = () => {
           className="w-full border p-2 mb-3 rounded"
         />
 
-        <input
-          type="file"
-          onChange={handleFileChange}
-          className="w-full mb-3"
-          accept="image/*"
-        />
+        <input type="file" onChange={handleFileChange} className="w-full mb-3" />
 
         <button
           type="submit"
-          className="w-full bg-[#4F225E] text-white font-semibold rounded py-2 hover:bg-purple-800"
+          className="w-full bg-purple-700 text-white font-semibold rounded py-2 hover:bg-purple-800"
         >
           Create Product
         </button>
@@ -248,4 +230,4 @@ const CreateProduct: React.FC = () => {
   );
 };
 
-export default CreateProduct;
+export default AdminProducts;
