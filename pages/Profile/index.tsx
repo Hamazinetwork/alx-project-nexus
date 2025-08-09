@@ -1,84 +1,122 @@
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+
+// Import necessary components and icons
+import Header from '@/components/layout/Header';
+import Search from '@/components/common/Search';
+import ProductList from '@/components/product/Product';
+import { FaSpinner, FaExclamationTriangle, FaUserCircle } from 'react-icons/fa';
 
 type UserProfile = {
-  email: string;
   fullname: string;
-  created_at?: string;
+  email: string;
 };
 
-const Profile: React.FC = () => {
+const ProfilePage: React.FC = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    // 1️⃣ Load from localStorage first
+    // Check for token and user data in localStorage
+    const token = localStorage.getItem('accessToken');
     const savedUser = localStorage.getItem('user');
-    const token = localStorage.getItem('token');
 
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-
+    // If no token exists, the user is not logged in. Redirect them.
     if (!token) {
-      setLoading(false);
-      return;
+      router.push('/Login'); // Assuming your login page is at /Login
+      return; 
     }
 
-    // 2️⃣ Verify token with backend
-    const fetchProfile = async () => {
+    // If a token exists, parse the user data from localStorage
+    if (savedUser) {
       try {
-        const response = await fetch('https://martafrica.onrender.com/api/profile/', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/json',
-          },
-        });
-
-        const data = await response.json();
-        console.log("Profile response:", data);
-
-        if (response.ok) {
-          setUser(data);
-        } else {
-          console.warn("Token invalid or expired");
-        }
-      } catch (err) {
-        console.error("Error fetching profile:", err);
-      } finally {
-        setLoading(false);
+        setUser(JSON.parse(savedUser));
+      } catch (error) {
+        console.error("Failed to parse user data from localStorage", error);
+        // If data is corrupted, clear it and redirect to login
+        localStorage.removeItem('user');
+        localStorage.removeItem('accessToken');
+        router.push('/Login');
+        return;
       }
-    };
+    }
+    
+    // Stop the loading state once checks are complete
+    setLoading(false);
 
-    fetchProfile();
-  }, []);
+  }, [router]);
 
-  if (loading) return <p className="text-center mt-10">Loading profile...</p>;
-
-  if (!user) return <p className="text-center mt-10 text-red-500">You are not logged in.</p>;
-
-  return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md text-center">
-        <h2 className="text-2xl font-bold mb-4">👤 User Profile</h2>
-        <p className="text-gray-700"><strong>Full Name:</strong> {user.fullname}</p>
-        <p className="text-gray-700"><strong>Email:</strong> {user.email}</p>
-        {user.created_at && (
-          <p className="text-gray-500 text-sm mt-2">Joined: {new Date(user.created_at).toDateString()}</p>
-        )}
-
-        <button
-          onClick={() => {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            window.location.href = '/Login';
-          }}
-          className="mt-6 bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md"
-        >
-          Logout
-        </button>
+  // --- Enhanced Loading State ---
+  // Display a full-page, centered spinner while we check for authentication
+  if (loading) {
+    return (
+      <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50">
+        <FaSpinner className="animate-spin text-purple-600 text-4xl mb-4" />
+        <p className="text-lg text-gray-700">Loading Your Dashboard...</p>
       </div>
+    );
+  }
+
+  // --- Enhanced Not Logged-In State ---
+  // This is a safeguard if loading finishes but user is still null.
+  // Provides a clear message and a path forward.
+  if (!user) {
+    return (
+        <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50 text-center p-4">
+            <FaExclamationTriangle className="text-red-500 text-5xl mb-4" />
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">Access Denied</h1>
+            <p className="text-gray-600 mb-6">You must be logged in to view this page.</p>
+            <button
+                onClick={() => router.push('/Login')}
+                className="bg-purple-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-purple-700 transition-colors"
+            >
+                Go to Login
+            </button>
+        </div>
+    );
+  }
+
+  // --- Main Dashboard for the Logged-In User ---
+  return (
+    // Add a soft background color to the entire page for a premium feel
+    <div className="bg-gray-50 min-h-screen">
+      <Header />
+      <main>
+        {/* --- Hero Welcome Section --- */}
+        <div className="bg-gradient-to-r from-purple-600 to-indigo-700 text-white py-16 sm:py-20 text-center">
+          <div className="container mx-auto px-6">
+            <FaUserCircle className="text-5xl mx-auto mb-4 text-purple-200" />
+            <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">
+              Welcome Back,
+            </h1>
+            <p className="text-4xl sm:text-5xl font-extrabold tracking-tight text-purple-200 mt-1">
+              {user.fullname}!
+            </p>
+            <p className="mt-4 text-lg text-purple-100 max-w-2xl mx-auto">
+              Ready to find something amazing? Start your search below or browse our latest products.
+            </p>
+          </div>
+        </div>
+
+        {/* --- Search Bar --- */}
+        {/* Placed strategically to bridge the hero and the product list */}
+        <div className="container mx-auto px-6 -mt-12 relative z-10">
+            <div className="max-w-3xl mx-auto">
+                <Search />
+            </div>
+        </div>
+
+        {/* --- Product List Section --- */}
+        <div className="container mx-auto px-6 py-12">
+            <div className="border-b border-gray-200 pb-4 mb-8">
+                <h2 className="text-3xl font-bold text-gray-800">Explore Our Products</h2>
+            </div>
+            <ProductList />
+        </div>
+      </main>
     </div>
   );
 };
 
-export default Profile;
+export default ProfilePage;

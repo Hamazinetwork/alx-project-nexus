@@ -38,6 +38,7 @@ The project is built with **Next.js**, **TypeScript**, **Tailwind CSS**, and int
 ## API Endpoints Used
 Method	Endpoint	Description
 POST	/register/	Create new user account
+POST	/admin/register/	Create new admin account
 POST	/login/	Login and return auth token
 GET	/profile/	Fetch user profile
 GET	/products/	List all products

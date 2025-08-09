@@ -49,16 +49,21 @@ const Login: React.FC = () => {
         throw new Error(data.message || 'Invalid email or password');
       }
 
-      // Token storage
-      if (data.token) {
-        localStorage.setItem('token', data.token);
+      // --- FIX 1: Correctly store the access token from the 'tokens' object ---
+      if (data.tokens && data.tokens.access) {
+        localStorage.setItem('accessToken', data.tokens.access);
       }
       if (data.user) {
         localStorage.setItem('user', JSON.stringify(data.user));
       }
 
-      //  Redirect 
-      router.push('/Profile');
+      // --- FIX 2: Correct the path to '/Profile' (capital 'P') ---
+      if (data.user && data.user.is_admin) {
+        router.push('/admin/dashboard');
+      } else {
+        router.push('/Profile'); // Use the correct case for the file name
+      }
+
     } catch (err) {
       setError((err as Error).message);
     } finally {
