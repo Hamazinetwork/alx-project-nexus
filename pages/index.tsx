@@ -13,7 +13,7 @@ const index = () => {
   return (
     <div>
       <Header/>
-      <Search/>
+     
        {/* Hero Section */}
       <section className="relative w-full h-[296px] sm:h-[421px] lg:h-[481px] flex items-center justify-center overflow-hidden bg-gray-50">
         {/* Background Image */}
@@ -62,7 +62,7 @@ const index = () => {
         </section>
         <div/>
       
-      <ProductL/>
+      <ProductList/>
       <Footer/>
     </div>
   )
