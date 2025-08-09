@@ -44,7 +44,7 @@ const ProductList: React.FC = () => {
         <div key={p.id} className="bg-white p-4 shadow rounded">
           <h3 className="font-bold text-lg">{p.name}</h3>
           <p>{p.description}</p>
-          <p className="text-purple-700 font-bold">${p.price}</p>
+          <p className="text-[#4F225E] font-bold">${p.price}</p>
           {p.images?.[0] && (
             <img src={p.images[0].url} alt={p.name} className="mt-2 rounded" />
           )}
