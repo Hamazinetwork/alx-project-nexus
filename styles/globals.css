@@ -19,11 +19,11 @@
   }
 }
 
-body {
+/* body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-}
+} */
 
 @tailwind base;
 @tailwind components;
@@ -36,4 +36,14 @@ body {
     @apply focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all;
     @apply disabled:bg-gray-200 disabled:cursor-not-allowed;
   }
+}
+
+body {
+  @apply bg-white text-gray-800 transition-colors duration-300;
+  /* Light mode styles */
+}
+
+html.dark body {
+  @apply bg-gray-900 text-gray-200;
+  /* Dark mode styles */
 }
