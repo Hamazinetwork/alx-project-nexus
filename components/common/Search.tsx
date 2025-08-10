@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 type ProductType = {
   id: number;
@@ -11,38 +11,42 @@ type ProductType = {
 
 const Search: React.FC = () => {
   const [search, setSearch] = useState("");
-  const [products, setProducts] = useState<ProductType[]>([]);
+  const [allProducts, setAllProducts] = useState<ProductType[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchProducts = async (query: string) => {
-    setLoading(true);
-    try {
-      const res = await fetch(
-        `https://martafrica.onrender.com/products?search=${encodeURIComponent(query)}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-
-      const data = await res.json();
-
-      // adjust this if your API returns { results: [...] }
-      setProducts(Array.isArray(data) ? data : data.results || []);
-    } catch (error) {
-      console.error("Search fetch error:", error);
-      setProducts([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // fetch all products once
+  useEffect(() => {
+    const fetchAll = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch("https://martafrica.onrender.com/api/products/", {
+          headers: { "Content-Type": "application/json" },
+        });
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        const data = await res.json();
+        const products = Array.isArray(data) ? data : data.results || [];
+        setAllProducts(products);
+        setFilteredProducts(products);
+      } catch (err) {
+        console.error("Fetch error:", err);
+        setAllProducts([]);
+        setFilteredProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAll();
+  }, []);
 
   const handleSearch = () => {
     if (search.trim()) {
-      fetchProducts(search.trim());
+      const results = allProducts.filter((p) =>
+        p.name.toLowerCase().includes(search.toLowerCase())
+      );
+      setFilteredProducts(results);
+    } else {
+      setFilteredProducts(allProducts);
     }
   };
 
@@ -64,11 +68,11 @@ const Search: React.FC = () => {
         </button>
       </div>
 
-      {loading && <p>Searching...</p>}
+      {loading && <p>Loading products...</p>}
 
-      {!loading && products.length > 0 && (
+      {!loading && filteredProducts.length > 0 && (
         <ul className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <li
               key={product.id}
               className="border rounded p-3 shadow hover:shadow-lg transition"
@@ -89,7 +93,7 @@ const Search: React.FC = () => {
         </ul>
       )}
 
-      {!loading && products.length === 0 && search && (
+      {!loading && filteredProducts.length === 0 && search && (
         <p>No products found for "{search}"</p>
       )}
     </div>
@@ -97,4 +101,3 @@ const Search: React.FC = () => {
 };
 
 export default Search;
-

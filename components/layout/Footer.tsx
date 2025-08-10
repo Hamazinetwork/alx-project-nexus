@@ -2,19 +2,19 @@ import React from 'react'
 
 const Footer = () => {
   return (
-    <div className='bg-black flex '>
+    <div className='bg-black flex gap-10 '>
         <div>
-            <p>MartAfrica is an E-commerce platform that sells African product to the word</p>
+            <p className='text-white'>MartAfrica is an E-commerce platform that sells African product to the word</p>
         </div>
         <div className='flex flex-col'>
-            <p>Company</p>
-            <p>About us </p>
-            <p>blog</p>
+            <p className='text-white'>Company</p>
+            <p className='text-white'>About us </p>
+            <p className='text-white'>blog</p>
         </div>
         <div className='flex flex-col'>
-            <p>Help</p>
-            <p>Suppory </p>
-            <p>Refund Process</p>
+            <p className='text-white'>Help</p>
+            <p className='text-white'>Suppory </p>
+            <p className='text-white'>Refund Process</p>
         </div>
       
     </div>

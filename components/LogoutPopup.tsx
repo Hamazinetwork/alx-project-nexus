@@ -38,7 +38,7 @@ const LogoutPopup: React.FC<LogoutPopupProps> = ({ isOpen, onClose, onLogout }) 
       onClose();
 
       // Redirect to login
-      router.push('/admin/login');
+      router.push('/Login');
 
       if (!response.ok) {
         console.error('Logout API failed:', response.statusText);
@@ -47,7 +47,7 @@ const LogoutPopup: React.FC<LogoutPopupProps> = ({ isOpen, onClose, onLogout }) 
       console.error('Logout error:', error);
       // Still proceed with logout even if API fails
       onClose();
-      router.push('/admin/login');
+      router.push('/Login');
     } finally {
       setIsLoggingOut(false);
     }

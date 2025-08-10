@@ -6,6 +6,7 @@ import Header from '@/components/layout/Header';
 import Search from '@/components/common/Search';
 import ProductList from '@/components/product/Product';
 import { FaSpinner, FaExclamationTriangle, FaUserCircle } from 'react-icons/fa';
+import products from '../admin/products';
 
 type UserProfile = {
   fullname: string;
@@ -103,7 +104,7 @@ const ProfilePage: React.FC = () => {
         {/* Placed strategically to bridge the hero and the product list */}
         <div className="container mx-auto px-6 -mt-12 relative z-10">
             <div className="max-w-3xl mx-auto">
-                <Search />
+                <Search  />
             </div>
         </div>
 
