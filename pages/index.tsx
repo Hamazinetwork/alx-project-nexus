@@ -3,8 +3,8 @@ import Search from '@/components/common/Search'
 import Header from '@/components/layout/Header'
 import ProductList from '@/components/product/Product'
 import Image from 'next/image'
-import ProductL from '@/components/product/ProductList'
-import Footer from '@/components/layout/Footer'
+// import ProductL from '@/components/product/ProductList'
+// import Footer from '@/components/layout/Footer'
 
 
 
@@ -13,6 +13,7 @@ const index = () => {
   return (
     <div>
       <Header/>
+      <Search/>
      
        {/* Hero Section */}
       <section className="relative w-full h-[296px] sm:h-[421px] lg:h-[481px] flex items-center justify-center overflow-hidden bg-gray-50">
@@ -63,7 +64,7 @@ const index = () => {
         <div/>
       
       <ProductList/>
-      <Footer/>
+      {/* <Footer/> */}
     </div>
   )
 }
