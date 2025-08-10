@@ -6,6 +6,8 @@ import Header from '@/components/layout/Header';
 import Search from '@/components/common/Search';
 import ProductList from '@/components/product/Product';
 import { FaSpinner, FaExclamationTriangle, FaUserCircle } from 'react-icons/fa';
+import products from '../admin/products';
+import SearchResultsPage from '../search';
 
 type UserProfile = {
   fullname: string;
@@ -84,7 +86,7 @@ const ProfilePage: React.FC = () => {
       <Header />
       <main>
         {/* --- Hero Welcome Section --- */}
-        <div className="bg-gradient-to-r from-purple-600 to-indigo-700 text-white py-16 sm:py-20 text-center">
+        <div className="bg-gradient-to-r from-[#4F225E] to-indigo-700 text-white py-16 sm:py-20 text-center">
           <div className="container mx-auto px-6">
             <FaUserCircle className="text-5xl mx-auto mb-4 text-purple-200" />
             <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">
@@ -103,7 +105,7 @@ const ProfilePage: React.FC = () => {
         {/* Placed strategically to bridge the hero and the product list */}
         <div className="container mx-auto px-6 -mt-12 relative z-10">
             <div className="max-w-3xl mx-auto">
-                <Search />
+                <Search  />
             </div>
         </div>
 

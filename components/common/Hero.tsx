@@ -1,19 +1,9 @@
 import React from 'react'
-import Search from '@/components/common/Search'
-import Header from '@/components/layout/Header'
-import ProductList from '@/components/product/Product'
-import Image from 'next/image'
-import ProductL from '@/components/product/ProductList'
-import Footer from '@/components/layout/Footer'
+import Image from 'next/image';
 
-
-
-
-const index = () => {
+const Hero = () => {
   return (
     <div>
-      <Header/>
-     
        {/* Hero Section */}
       <section className="relative w-full h-[296px] sm:h-[421px] lg:h-[481px] flex items-center justify-center overflow-hidden bg-gray-50">
         {/* Background Image */}
@@ -50,22 +40,20 @@ const index = () => {
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight">
             Find your favorite
             <br />
-            African Products here!
+            place here!
           </h1>
 
           {/* Subheading */}
           <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium opacity-90 max-w-2xl mx-auto leading-relaxed">
-            The best marketplace dedicated to sharing the beauty, creativity, and craftsmanship of Africa with the world.
+            The best prices for over 2 million properties worldwide
           </p>
         </div>
         
         </section>
-        <div/>
-      
-      <ProductList/>
-      <Footer/>
+        
     </div>
   )
 }
 
-export default index
+export default Hero;
+

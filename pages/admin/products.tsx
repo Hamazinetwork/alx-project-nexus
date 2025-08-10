@@ -226,7 +226,7 @@ const CreateProduct: React.FC = () => {
           {/* --- Submit Button with Loading State --- */}
           <button
             type="submit"
-            className="w-full flex justify-center items-center gap-3 bg-purple-700 text-white font-bold rounded-lg py-3 px-4 hover:bg-purple-800 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed transform hover:scale-105"
+            className="w-full flex justify-center items-center gap-3 bg-[#4F225E] text-white font-bold rounded-lg py-3 px-4 hover:bg-purple-800 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed transform hover:scale-105"
             disabled={isSubmitting || !formData.image}
           >
             {isSubmitting ? "Creating..." : "Create Product"}

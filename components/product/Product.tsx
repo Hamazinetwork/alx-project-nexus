@@ -141,7 +141,7 @@ const ProductList: React.FC = () => {
             
             <div className="mt-4">
               <div className="flex justify-between items-center pt-2">
-                <p className="text-purple-700 font-bold text-xl">
+                <p className="text-[4F225E] font-bold text-xl">
                   ${formatPrice(product.price)}
                 </p>
                 {product.qty_left !== undefined && (
@@ -150,7 +150,7 @@ const ProductList: React.FC = () => {
               </div>
               <button
                 onClick={() => handleAddToCart(product)}
-                className="w-full bg-purple-700 text-white py-2 px-4 rounded hover:bg-purple-800 transition-colors mt-3"
+                className="w-full bg-[#4F225E] text-white py-2 px-4 rounded hover:bg-purple-800 transition-colors mt-3"
               >
                 Add to Cart
               </button>
