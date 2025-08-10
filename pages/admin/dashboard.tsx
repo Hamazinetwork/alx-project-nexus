@@ -5,6 +5,7 @@ import {
   FaUsers,
   FaTags,
   FaExclamationTriangle,
+  FaShoppingCart,
 } from "react-icons/fa";
 import {
   BarChart,
@@ -18,7 +19,7 @@ import {
   Pie,
   Cell,
 } from "recharts";
-import AdminLayout from "@/components/layout/AdminLayout"; // Import the new layout
+import AdminLayout from "@/components/layout/AdminLayout";
 
 // Define types for our data structures
 interface AdminUser {
@@ -38,6 +39,7 @@ interface StatsData {
   total_users: number;
   total_orders: number;
   low_stock_count: number;
+  total_categories: number;
 }
 
 interface DashboardData {
@@ -54,6 +56,11 @@ interface LowStockProduct {
   qty_left: number;
 }
 
+interface Category {
+  id: number;
+  name: string;
+}
+
 const AdminDashboard: React.FC = () => {
   const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
@@ -61,12 +68,11 @@ const AdminDashboard: React.FC = () => {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [stats, setStats] = useState<StatsData | null>(null);
   const [lowStock, setLowStock] = useState<LowStockProduct[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [authChecked, setAuthChecked] = useState(false);
 
-  // --- AUTHENTICATION AND DATA FETCHING ---
-  // Note: All your original logic for auth and fetching remains unchanged.
-  
+  // --- AUTHENTICATION ---
   const validateToken = (token: string): boolean => {
     try {
       const parts = token.split('.');
@@ -103,16 +109,44 @@ const AdminDashboard: React.FC = () => {
     }
   }, [router]);
 
+  // --- DATA FETCHING ---
   useEffect(() => {
     if (!authChecked || !token) return;
 
+    // Fetch all admin-specific data that requires auth
+    const fetchAdminData = async () => {
+        try {
+            await Promise.all([
+                fetchDashboardData(),
+                fetchStats(),
+                fetchLowStock(),
+            ]);
+        } catch (err) {
+            console.error("Error loading protected admin data:", err);
+        }
+    };
+
+    // Fetch public category data separately
+    const getCategories = async () => {
+        try {
+            const res = await fetch('https://martafrica.onrender.com/api/categories/');
+            const data = await res.json();
+            const fetchedCategories = Array.isArray(data) ? data : data.results;
+            setCategories(Array.isArray(fetchedCategories) ? fetchedCategories : []);
+        } catch (error) {
+            console.error("Error fetching categories:", error);
+            setCategories([]);
+        }
+    };
+
     setLoading(true);
-    Promise.all([fetchDashboardData(), fetchStats(), fetchLowStock()])
-      .catch((err) => console.error("Error loading dashboard data:", err))
-      .finally(() => setLoading(false));
+    Promise.all([fetchAdminData(), getCategories()])
+        .finally(() => setLoading(false));
+
   }, [token, authChecked]);
 
-  const fetchAPI = async (url: string, token: string) => {
+  // Helper for authenticated API calls
+  const fetchAPI = async (url: string) => {
     const res = await fetch(url, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -126,15 +160,16 @@ const AdminDashboard: React.FC = () => {
     return res.json();
   };
 
-  const fetchDashboardData = () => fetchAPI("https://martafrica.onrender.com/api/admin/dashboard/", token!).then(data => setDashboardData(data));
-  const fetchStats = () => fetchAPI("https://martafrica.onrender.com/api/admin/stats/", token!).then(data => setStats(data));
-  const fetchLowStock = () => fetchAPI("https://martafrica.onrender.com/api/admin/low-stock/", token!).then(data => setLowStock(data));
+  const fetchDashboardData = () => fetchAPI("https://martafrica.onrender.com/api/admin/dashboard/").then(data => setDashboardData(data));
+  const fetchStats = () => fetchAPI("https://martafrica.onrender.com/api/admin/stats/").then(data => setStats(data));
+  const fetchLowStock = () => fetchAPI("https://martafrica.onrender.com/api/admin/low-stock/").then(data => setLowStock(data));
 
   // --- CHART DATA ---
   const chartData = [
     { name: "Products", value: stats?.total_products || 0 },
     { name: "Users", value: dashboardData?.total_users || 0 },
     { name: "Orders", value: stats?.total_orders || 0 },
+    { name: "Categories", value: stats?.total_categories || 0 },
   ];
 
   const lowStockChartData = [
@@ -167,11 +202,12 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <StatCard icon={<FaBox />} title="Total Products" value={stats?.total_products} color="text-blue-500" />
-        <StatCard icon={<FaUsers />} title="Total Users" value={dashboardData?.total_users} color="text-green-500" />
-        <StatCard icon={<FaTags />} title="Total Orders" value={stats?.total_orders} color="text-yellow-500" />
-        <StatCard icon={<FaExclamationTriangle />} title="Low Stock Items" value={stats?.low_stock_count} color="text-red-500" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-8">
+        <StatCard icon={<FaBox size={22} />} title="Total Products" value={stats?.total_products} color="text-teal-400" />
+        <StatCard icon={<FaUsers size={22} />} title="Total Users" value={dashboardData?.total_users} color="text-sky-400" />
+        <StatCard icon={<FaShoppingCart size={22} />} title="Total Orders" value={stats?.total_orders} color="text-amber-400" />
+        <StatCard icon={<FaTags size={22} />} title="Categories" value={stats?.total_categories} color="text-indigo-400" />
+        <StatCard icon={<FaExclamationTriangle size={22} />} title="Low Stock" value={stats?.low_stock_count} color="text-red-500" />
       </div>
 
       {/* Charts and Visuals */}
@@ -203,6 +239,38 @@ const AdminDashboard: React.FC = () => {
               <span className="font-bold text-red-500">{stats?.low_stock_count}</span> products are running low.
             </p>
           </div>
+        </div>
+      </div>
+
+      {/* Category List */}
+      <div className="mt-8 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+        <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">
+          Product Categories
+        </h2>
+        <div className="overflow-x-auto">
+          {categories.length > 0 ? (
+            <Table>
+              <thead className="bg-gray-50 dark:bg-gray-700">
+                <tr>
+                  <TableHeader>Category Name</TableHeader>
+                </tr>
+              </thead>
+              <tbody>
+                {categories.map((category) => (
+                  <tr
+                    key={category.id}
+                    className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                  >
+                    <TableData>{category.name}</TableData>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          ) : (
+            <p className="text-center text-gray-500 dark:text-gray-400 py-4">
+              No categories found.
+            </p>
+          )}
         </div>
       </div>
 

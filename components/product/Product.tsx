@@ -114,7 +114,7 @@ const ProductList: React.FC = () => {
                   <FaHeart size={20} />
                 </button>
                 {product.primary_image ? (
-                  <div className="relative w-full h-48 bg-gray-100 rounded-lg overflow-hidden">
+                  <div className="relative w-fAull h-48 bg-gray-100 rounded-lg overflow-hidden">
                     <Image
                       src={product.primary_image}
                       alt={product.name}
