@@ -2,7 +2,6 @@ import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import {
-  FaSearch,
   FaHeart,
   FaUser,
   FaUserPlus,
@@ -185,14 +184,7 @@ const Header: React.FC = () => {
                     </option>
                   ))}
               </select>
-              <input
-                type="text"
-                placeholder="Search for more than 20,000 products"
-                className="w-full px-4 py-2 border border-gray-300 focus:ring-2 focus:ring-yellow-500"
-              />
-              <button className="bg-yellow-500 text-white px-4 py-2 rounded-r-lg hover:bg-yellow-600">
-                <FaSearch />
-              </button>
+             
             </div>
 
             <div className="flex items-center gap-4 sm:gap-6">
