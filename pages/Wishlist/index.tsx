@@ -39,6 +39,7 @@ const WishlistPage: React.FC = () => {
         const data = await getWishlist(token);
         setWishlistItems(data);
         setError(null);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         setError(err.message || 'An error occurred while fetching your wishlist.');
         console.error(err);
@@ -64,6 +65,7 @@ const WishlistPage: React.FC = () => {
     try {
       // Call the API to remove the item from the backend
       await removeFromWishlist(wishlistItemId, token);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error('Failed to remove item from wishlist:', err);
       alert('Failed to remove item. Please try again.');

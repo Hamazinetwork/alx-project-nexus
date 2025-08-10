@@ -76,6 +76,7 @@ const OrderPage: React.FC = () => {
       // Assuming you have an order success page
       router.push('/order-success');
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message);
     } finally {

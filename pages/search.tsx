@@ -79,7 +79,7 @@ const SearchResultsPage: React.FC = () => {
           <h1 className="text-3xl font-bold text-gray-800">Search Results</h1>
           {typeof q === 'string' && q.trim() && !loading && (
             <p className="text-gray-600 mt-1">
-              Found {totalResults} results for: <span className="font-semibold text-gray-900">"{q}"</span>
+              Found {totalResults} results for: <span className="font-semibold text-gray-900">&quot;{q}&quot;</span>
             </p>
           )}
         </div>
@@ -119,7 +119,7 @@ const SearchResultsPage: React.FC = () => {
         ) : (
           <div className="text-center py-20">
             <h2 className="text-xl font-semibold">No Products Found</h2>
-            <p className="text-gray-500 mt-2">We couldn't find any products matching your search for "{q}".</p>
+            <p className="text-gray-500 mt-2">We couldn&apos;t find any products matching your search for &quot;{q}&quot;.</p>
           </div>
         )}
       </main>

@@ -236,7 +236,7 @@ const Search: React.FC = () => {
                     onClick={() => setShowResults(false)}
                     className="text-sm text-blue-600 hover:underline font-medium"
                   >
-                    View all results for "{query}"
+                    View all results for &quot;{query}&quot;
                   </Link>
                 </div>
               </>
