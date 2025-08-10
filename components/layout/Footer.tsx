@@ -4,26 +4,8 @@ import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa';
 
 const Footer: React.FC = () => {
   return (
-<<<<<<< HEAD
-    <div className='bg-black flex gap-10 '>
-        <div>
-            <p className='text-white'>MartAfrica is an E-commerce platform that sells African product to the word</p>
-        </div>
-        <div className='flex flex-col'>
-            <p className='text-white'>Company</p>
-            <p className='text-white'>About us </p>
-            <p className='text-white'>blog</p>
-        </div>
-        <div className='flex flex-col'>
-            <p className='text-white'>Help</p>
-            <p className='text-white'>Suppory </p>
-            <p className='text-white'>Refund Process</p>
-        </div>
-      
-    </div>
-  )
-}
-=======
+
+
     <footer className="bg-gray-900 text-gray-300">
       <div className="container mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -37,7 +19,7 @@ const Footer: React.FC = () => {
               MartAfrica is an E-commerce platform that sells authentic African products to the world.
             </p>
           </div>
->>>>>>> 1bca8e10ad29434c1ee25fcf620170d8f37e8c50
+
 
           {/* Column 2: Company Links */}
           <div>

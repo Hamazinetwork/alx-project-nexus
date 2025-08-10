@@ -7,6 +7,7 @@ import Search from '@/components/common/Search';
 import ProductList from '@/components/product/Product';
 import { FaSpinner, FaExclamationTriangle, FaUserCircle } from 'react-icons/fa';
 import products from '../admin/products';
+import SearchResultsPage from '../search';
 
 type UserProfile = {
   fullname: string;
