@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { FaBars, FaUserCircle, FaSignOutAlt } from 'react-icons/fa';
+import Search from '../common/Search'; // 1. Import the Search component
 
 // Props passed from AdminLayout.tsx
 interface HeaderProps {
@@ -118,9 +119,9 @@ const AdminHeader: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => 
           <div className="flex items-center justify-between h-16 -mb-px">
             
             {/* LEFT SIDE: Hamburger button for mobile sidebar */}
-            <div className="flex md:hidden">
+            <div className="flex">
               <button
-                className="text-gray-500 hover:text-gray-600"
+                className="text-gray-500 hover:text-gray-600 lg:hidden" // Only show on smaller screens
                 aria-controls="sidebar"
                 aria-expanded={sidebarOpen}
                 onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -130,8 +131,13 @@ const AdminHeader: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => 
               </button>
             </div>
 
-            {/* Empty div to push user menu to the right */}
-            <div className="flex-1"></div>
+            {/* --- FIX START: Add the Search component in the middle --- */}
+            <div className="flex-1 flex justify-center px-4">
+              <div className="w-full max-w-md">
+                <Search />
+              </div>
+            </div>
+            {/* --- FIX END --- */}
 
             {/* RIGHT SIDE: User Menu */}
             <div className="flex items-center space-x-3">
